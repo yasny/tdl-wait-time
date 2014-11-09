@@ -1,0 +1,77 @@
+body {
+    margin: 0 auto 0 auto;
+}
+ 
+h1 {
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 32px;
+    font-weight: 300;
+    height: 74px;
+    letter-spacing: -2px;
+    text-align: center;
+}
+ 
+p {
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    height: 72px;
+    line-height: 24px;
+}
+ 
+aside {
+    color: #636363;
+    display: block;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 13px;
+    height: 16px;
+    left: 780px;
+    text-align: right;
+}
+ 
+#chart {
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    border: 1px solid #dedede;
+}
+ 
+.rickshaw_graph .x_tick {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-left: 1px dotted rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+}
+.rickshaw_graph .x_tick .title {
+    position: absolute;
+    white-space: nowrap;
+    margin-left: 3px;
+    bottom: 1px;
+}
+ 
+#chart_container {
+    display: block;
+    position: relative;
+    margin-left: 50px;
+}
+ 
+/*
+.y_grid {
+    display: none;
+}
+  */
+ 
+#y_axis {
+    position: absolute;
+    width: 40px;
+    height: 500px;
+    left: -40px;
+}
+ 
+#legend {
+    vertical-align: top;
+    display: inline-block;
+}
+
+#preview {
+  margin-top: 10px;
+}
