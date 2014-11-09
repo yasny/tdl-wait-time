@@ -1,7 +1,15 @@
 #!/bin/bash
-BASE_DIR="/home/ec2-user/disney"
+BASE_DIR="$( dirname $0 )"
 DL_OUT_DIR="${BASE_DIR}/tdl"
 DS_OUT_DIR="${BASE_DIR}/tds"
+
+if [[ ! -d $DL_OUT_DIR ]]; then
+  mkdir $DL_OUT_DIR
+fi
+
+if [[ ! -d $DS_OUT_DIR ]]; then
+  mkdir $DS_OUT_DIR
+fi
 
 datetime=$( TZ="Asia/Tokyo" date +"%Y-%m-%d %H:%M" )
 file_datetime=$( TZ="Asia/Tokyo" date +%Y%m%d%H%M )
