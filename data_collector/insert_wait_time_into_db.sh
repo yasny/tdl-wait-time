@@ -19,22 +19,28 @@ fi
 
 while read line; do
   #echo $line 1>&2
+  if [[ $line == @* ]]; then
+    _land_id=$( execute_sql "select id from lands where name=\"${line:1}\";" $DB )
+    continue
+  fi
+
   _d=$( echo $line | cut -d"," -f1 )
   _n=$( echo $line | cut -d"," -f2 )
   _s=$( echo $line | cut -d"," -f3 )
   _f=$( echo $line | cut -d"," -f4 )
   _w=$( echo $line | cut -d"," -f5 )
+  _u=$( echo $line | cut -d"," -f6 )
 
   if [ -z "$_w" ]; then
     _w=0
   fi
 
-  _id=$( execute_sql "select id from attractions where name=\"$_n\";" $DB )
+  _id=$( execute_sql "select id from attractions where name=\"$_n\" and land_id=$_land_id;" $DB )
   if [ -z "$_id" ]; then
     echo "No ID for $_n"
     continue
   fi
 
-  execute_sql "insert into data (datetime,attraction_id,wait,status,fastpass) values (datetime(\"$_d\"),$_id,$_w,\"$_s\",\"$_f\");" $DB
+  execute_sql "insert into data (datetime,attraction_id,wait,status,fastpass,update_time) values (datetime(\"$_d\"),$_id,$_w,\"$_s\",\"$_f\",time(\"$_u\"));" $DB
 done < $1
 

@@ -8,8 +8,11 @@
   <!-- 日付値 -->
   <xsl:param name="datetime" />
 
-  <!-- すべてのテキスト要素を削除する -->
   <xsl:template match="text()" />
+
+  <xsl:template match="h2[@class='themeName']">
+    <xsl:text>@</xsl:text><xsl:value-of select="." /><xsl:text>&#10;</xsl:text>
+  </xsl:template>
 
   <!-- すべての<a>をマッチする -->
   <xsl:template match="a">
@@ -58,5 +61,4 @@
   <xsl:template match="div[@class='time']">
     <xsl:value-of select="translate(p[@class='waitTime'],'分','')" />
   </xsl:template>
-
 </xsl:stylesheet>
