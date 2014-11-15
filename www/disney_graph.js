@@ -2,9 +2,9 @@ var margin = {top:20, right:80, bottom:30, left:50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var parseDate = d3.time.format("%Y-%m-%d %H:%M").parse;
+var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
-d3.csv("all.csv", function(data) {
+d3.csv("all_from_db.csv", function(data) {
   var series = d3.keys(data[0]).filter(function(key) { return key == "attr"; });
   var colors = d3.scale.category10();
   colors.domain(series);
