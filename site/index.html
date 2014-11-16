@@ -4,21 +4,22 @@
   <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
   <link type="text/css" rel="stylesheet" href="static/css/disney_graph.css">
   <link type="text/css" rel="stylesheet" href="static/js/rickshaw/rickshaw.css">
-  <link type="text/css" rel="stylesheet" href="static/js/rickshaw/src/css/graph.css">
-  <link type="text/css" rel="stylesheet" href="static/js/rickshaw/src/css/detail.css">
-  <link type="text/css" rel="stylesheet" href="static/js/rickshaw/src/css/legend.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
   <script>
     jQuery.noConflict();
   </script>
-
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
+  <script src="http://d3js.org/d3.v3.js"></script>
 </head>
 <body>
 
-
   <h1>東京ディズニーランド・ディズニーシーの待ち時間</h1>
 
+  <div id="about" style="margin-left:10px;margin-bottom:15px;">
+    当サイトは過去の1周間分の待ち時間情報を表示する。
+    対象乗り物は、今現在固定である。
+    データ収集、サイト作成のコードは<a href="https://github.com/yasny/tdl-wait-time">GitHub</a>に公開している。
+  </div>
 
   <div id="chart_container">
     <div id="y_axis" class="plain"></div>
@@ -37,7 +38,6 @@
     </ul>
   </div>
 
-<script src="http://d3js.org/d3.v3.js"></script>
-<script src="static/js/rickshaw/rickshaw.js"></script>
-<script src="static/js/disney_graph.js"></script>
+  <script src="static/js/rickshaw/rickshaw.js"></script>
+  <script src="static/js/disney_graph.js"></script>
 </body>
