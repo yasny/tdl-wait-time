@@ -7,7 +7,6 @@ var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 d3.json("/disney/waittime", function(error, json) {
   if (error) return console.warn(error);
   var series = d3.keys(json[0]).filter(function(key) { return key == "attraction_name"; });
-  console.log(series);
   var colors = d3.scale.category10();
 
   json = d3.nest().key(function(d) { return d.attraction_name; }).entries(json);
@@ -20,7 +19,6 @@ d3.json("/disney/waittime", function(error, json) {
     });
   });
 
-  console.log(json);
   disney_graph(json);
 });
 
