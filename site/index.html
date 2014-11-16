@@ -10,6 +10,13 @@
   </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
   <script src="http://d3js.org/d3.v3.js"></script>
+  <script type="text/javascript">
+  jQuery(document).ready(function() {
+    jQuery("#legend_show_hide").click(function() {
+      jQuery("#legend").toggle();
+    });
+  });
+  </script>
 </head>
 <body>
 
@@ -24,9 +31,13 @@
   <div id="chart_container">
     <div id="y_axis" class="plain"></div>
     <div id="chart"></div>
-    <div id="legend"></div>
     <div id="preview"></div>
+    <div id="legend_container" style="position:absolute;top:0;right:0;">
+      <div id="legend_show_hide" style="float:left;margin-right:0px;" class="rickshaw_legend">&lt;</div>
+      <div id="legend" style="display:none;"></div>
+    </div>
   </div>
+
 
   <div id="notes" style="margin-top:10px;margin-left:10px;">
     <h3>CHANGELOG</h3>
