@@ -47,6 +47,11 @@ aside {
     margin-left: 3px;
     bottom: 1px;
 }
+
+.path.average_line {
+  stroke-width: 4;
+  stroke-dasharray: 4,5;
+}
  
 #chart_container {
     display: block;

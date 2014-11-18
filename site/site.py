@@ -21,6 +21,7 @@ class DisneyWaitTimeGraph(object):
   def index(self):
     return file('/home/ec2-user/tdl-wait-time/site/index.html')
 
+
 class WaitTimeWebService(object):
   exposed = True
 
@@ -32,6 +33,7 @@ class WaitTimeWebService(object):
       cur.execute('select d.datetime, a.name as attraction_name, d.wait from data as d join attractions as a on d.attraction_id=a.id where d.datetime > date("now","-7 days") and d.attraction_id IN (4,5,14,23,26,35,36,43,52,53) order by d.attraction_id, d.datetime;')
       data = json.dumps(list(cur.fetchall()))
       return data
+
 
 class AverageWaitTimeForWeekService(object):
   exposed = True
@@ -46,7 +48,7 @@ class AverageWaitTimeForWeekService(object):
       return data
 
 if __name__ == "__main__":
-  #cherrypy.process.plugins.Daemonizer(cherrypy.engine).subscribe()
+  cherrypy.process.plugins.Daemonizer(cherrypy.engine).subscribe()
 
   conf = {
     '/' : {
@@ -55,7 +57,7 @@ if __name__ == "__main__":
       'log.access_file' : os.path.join(os.getcwd(),"access.log"),
       'log.screen': False,
     },
-    '/waittime' : {
+    '/waittime_week' : {
       'request.dispatch':cherrypy.dispatch.MethodDispatcher(),
       'tools.response_headers.on': True,
       'tools.response_headers.headers': [('Content-Type', 'text/plain')],
@@ -72,7 +74,7 @@ if __name__ == "__main__":
   }
 
   webapp = DisneyWaitTimeGraph()
-  webapp.waittime = WaitTimeWebService()
+  webapp.waittime_week = WaitTimeWebService()
   webapp.waittime_avg_week = AverageWaitTimeForWeekService()
   cherrypy.quickstart(webapp, '/', conf)
 
