@@ -4,6 +4,9 @@ var margin = {top:20, right:80, bottom:30, left:50},
 
 var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
+var waittime_data;
+var avg_data;
+
 d3.json("/disney/waittime", function(error, json) {
   if (error) return console.warn(error);
   var series = d3.keys(json[0]).filter(function(key) { return key == "attraction_name"; });
@@ -19,7 +22,31 @@ d3.json("/disney/waittime", function(error, json) {
     });
   });
 
-  disney_graph(json);
+  waittime_data = json;
+  
+  d3.json("/disney/waittime_avg_week", function(error, json) {
+    if (error) return console.warn(error);
+    var series = d3.keys(json[0]).filter(function(key) { return key == "name"; });
+
+    json = d3.nest().key(function(d) { return d.name; }).entries(json);
+
+    json.forEach(function(d) {
+      d.name = d.key;
+      d.data = d.values.map(function(e) {
+        return { x: parseDate(e.datetime)/1000, y: +e.average };
+      });
+    });
+
+    json[0].color = 'red';
+    json[1].color = 'blue';
+
+    avg_data = json;
+
+    waittime_data = waittime_data.concat(avg_data);
+
+    disney_graph(waittime_data);
+  });
+
 });
 
 
@@ -27,6 +54,8 @@ var disney_graph = function(sets) {
   var graph = new Rickshaw.Graph( {
     element: document.querySelector("#chart"),
     renderer: "line",
+    interpolation: "linear",
+    offset: "zero",
     width: width,
     height: height,
     series: sets
