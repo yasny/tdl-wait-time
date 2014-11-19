@@ -83,8 +83,14 @@ var disney_graph = function(sets) {
 
   var hoverDetail = new Rickshaw.Graph.HoverDetail( {
     graph: graph,
-    xFormatter: function(x) { return new Date(x * 1000).toLocaleString(); },
-    yFormatter: function(y) { return y.toString() + "分"; }
+    //xFormatter: function(x) { return new Date(x * 1000).toLocaleString(); },
+    //yFormatter: function(y) { return y.toString() + "分"; }
+    formatter: function(series, x, y) {
+      var date = '<span class="date">' + new Date(x*1000) + '</span>';
+      var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
+      var content = swatch + series.name + ":&nbsp;" + parseInt(y) + '分<br>' + date;
+      return content;
+    }
   });
 
   var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
