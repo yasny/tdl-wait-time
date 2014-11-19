@@ -9,6 +9,8 @@ import cherrypy
 
 DB_STRING = "/home/ec2-user/tdl-wait-time/data_collector/disney.sqlite"
 
+# とりあえず全部ハードコードしちゃう！
+# sqlite側でビューを作ったほうが綺麗かもしれない
 WAITTIME_WEEK_SQL = ('select d.datetime, a.name as attraction_name, d.wait from data as d '
                        'join attractions as a on d.attraction_id=a.id '
                      'where d.datetime > date("now","-7 days") '
@@ -20,9 +22,10 @@ WAITTIME_AVG_WEEK_SQL = ('select d.datetime, p.name as name, avg(wait) as averag
                              'lands as l on a.land_id = l.id, '
                              'parks as p on l.park_id = p.id '
                          'where d.wait <> 0 '
-                          'and d.datetime > date("now","-7 days") '
+                           'and d.datetime > date("now","-7 days") '
                          'group by d.datetime, p.id '
                          'order by p.id, d.datetime;')
+
 
 def dict_factory(cursor, row):
   """DB行をdictに変換する"""
@@ -62,7 +65,6 @@ class AverageWaitTimeForWeekService(object):
     with sqlite3.connect(DB_STRING) as c:
       c.row_factory = dict_factory
       cur = c.cursor()
-      # とりあえず全部ハードコードしちゃう！
       cur.execute(WAITTIME_AVG_WEEK_SQL)
       data = json.dumps(cur.fetchall())
       return data

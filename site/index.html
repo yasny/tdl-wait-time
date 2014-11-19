@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 <head>
   <title>東京ディズニーランド・ディズニーシーの待ち時間</title>
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
   <link type="text/css" rel="stylesheet" href="static/css/disney_graph.css">
   <link type="text/css" rel="stylesheet" href="static/js/rickshaw/rickshaw.css">
@@ -13,8 +14,13 @@
   <script src="http://d3js.org/d3.v3.js"></script>
   <script type="text/javascript">
   jQuery(document).ready(function() {
-    jQuery("#legend_show_hide").click(function() {
+    jQuery("#legend_show_hide").mouseenter(function() {
       jQuery("#legend").toggle();
+    });
+    jQuery("#legend").mouseleave(function() {
+      setTimeout(function(){
+        jQuery("#legend").hide();
+      },300);
     });
   });
   </script>
@@ -34,7 +40,7 @@
     <div id="chart"></div>
     <div id="preview"></div>
     <div id="legend_container" style="position:absolute;top:0;right:0;">
-      <div id="legend_show_hide" style="float:left;margin-right:0px;" class="rickshaw_legend">&lt;</div>
+      <div id="legend_show_hide" style="float:left;margin-right:0px;" class="rickshaw_legend"><i class="fa fa-line-chart"></i></div>
       <div id="legend" style="display:none;"></div>
     </div>
   </div>
