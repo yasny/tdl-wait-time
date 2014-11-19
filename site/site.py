@@ -14,7 +14,7 @@ DB_STRING = "/home/ec2-user/tdl-wait-time/data_collector/disney.sqlite"
 WAITTIME_WEEK_SQL = ('select d.datetime, a.name as attraction_name, d.wait from data as d '
                        'join attractions as a on d.attraction_id=a.id '
                      'where d.datetime > date("now","-7 days") '
-                       'and d.attraction_id IN (4,5,14,23,26,35,36,43,52,53) '
+                       'and d.attraction_id IN (4,5,14,23,26,35,36,43,44,52,53) '
                      'order by d.attraction_id, d.datetime;')
 
 WAITTIME_AVG_WEEK_SQL = ('select d.datetime, p.name as name, avg(wait) as average from data as d '
