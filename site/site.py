@@ -7,7 +7,7 @@ import string
 import json
 import cherrypy
 
-DB_STRING = "/home/ec2-user/tdl-wait-time/data_collector/disney.sqlite"
+DB_STRING = "../data_collector/disney.sqlite"
 
 # とりあえず全部ハードコードしちゃう！
 # sqlite側でビューを作ったほうが綺麗かもしれない
@@ -26,6 +26,8 @@ WAITTIME_AVG_WEEK_SQL = ('select d.datetime, p.name as name, avg(wait) as averag
                          'group by d.datetime, p.id '
                          'order by p.id, d.datetime;')
 
+DEFAULT_ATTRACTIONS="4,5,14,23,26,35,36,43,44,52,53"
+
 
 def dict_factory(cursor, row):
   """DB行をdictに変換する"""
@@ -38,8 +40,8 @@ def dict_factory(cursor, row):
 class DisneyWaitTimeGraph(object):
   """index.htmlページ"""
   @cherrypy.expose
-  def index(self):
-    return file('/home/ec2-user/tdl-wait-time/site/index.html')
+  def index(self, daysPrevious=7):
+    return file('index.html')
 
 
 class WaitTimeWebService(object):
@@ -54,6 +56,62 @@ class WaitTimeWebService(object):
       cur.execute(WAITTIME_WEEK_SQL)
       data = json.dumps(cur.fetchall())
       return data
+
+
+class WaitTimeWebServiceV2(object):
+  exposed = True
+
+  @cherrypy.tools.accept(media='text/plain')
+  def GET(self, daysPrevious=7, attractions=DEFAULT_ATTRACTIONS, parkAverage=False):
+    cherrypy.log("daysPrevious = "+str(daysPrevious))
+    cherrypy.log("attractions = "+str(attractions))
+    if (not str(daysPrevious).isdigit()):
+      raise cherrypy.HTTPError(403)
+    if (len(attractions) == 0):
+      raise cherrypy.HTTPError(403)
+
+    sql = ""
+
+    if (not parkAverage):
+      sql = ('select d.datetime, a.name as attraction_name, d.wait from data as d '
+                         'join attractions as a on d.attraction_id=a.id '
+                       'where d.attraction_id IN ('+str(attractions)+') '
+                         'and d.datetime > date("now","-'+str(daysPrevious)+' days") '
+                       'order by d.attraction_id, d.datetime;')
+
+      if (daysPrevious==0):
+        sql = ('select d.datetime, a.name as attraction_name, d.wait from data as d '
+                           'join attractions as a on d.attraction_id=a.id '
+                         'where d.attraction_id IN ('+str(attractions)+') '
+                           'and date(d.datetime)=date("now") '
+                         'order by d.attraction_id, d.datetime;')
+
+    else:
+      sql = ('select d.datetime, p.name as name, avg(wait) as average from data as d '
+                                 'inner join attractions as a on d.attraction_id = a.id, '
+                                   'lands as l on a.land_id = l.id, '
+                                   'parks as p on l.park_id = p.id '
+                               'where d.wait <> 0 '
+                                 'and d.datetime > date("now","-'+str(daysPrevious)+' days") '
+                               'group by d.datetime, p.id '
+                               'order by p.id, d.datetime;')
+      if (daysPrevious==0):
+        sql = ('select d.datetime, p.name as name, avg(wait) as average from data as d '
+                                   'inner join attractions as a on d.attraction_id = a.id, '
+                                     'lands as l on a.land_id = l.id, '
+                                     'parks as p on l.park_id = p.id '
+                                 'where d.wait <> 0 '
+                                   'and date(d.datetime) = date("now") '
+                                 'group by d.datetime, p.id '
+                                 'order by p.id, d.datetime;')
+
+
+    with sqlite3.connect(DB_STRING) as c:
+      c.row_factory = dict_factory
+      cur = c.cursor()
+      cur.execute(sql)
+      return json.dumps(cur.fetchall())
+
 
 
 class AverageWaitTimeForWeekService(object):
@@ -72,7 +130,7 @@ class AverageWaitTimeForWeekService(object):
 
 if __name__ == "__main__":
   # フォークしてバックグラウンドで動かす
-  cherrypy.process.plugins.Daemonizer(cherrypy.engine).subscribe()
+  #cherrypy.process.plugins.Daemonizer(cherrypy.engine).subscribe()
 
   # CherryPy設定
   conf = {
@@ -84,6 +142,11 @@ if __name__ == "__main__":
       'log.screen': False,
     },
     '/waittime_week' : {
+      'request.dispatch':cherrypy.dispatch.MethodDispatcher(),
+      'tools.response_headers.on': True,
+      'tools.response_headers.headers': [('Content-Type', 'text/plain')],
+    },
+    '/waittime' : {
       'request.dispatch':cherrypy.dispatch.MethodDispatcher(),
       'tools.response_headers.on': True,
       'tools.response_headers.headers': [('Content-Type', 'text/plain')],
@@ -102,5 +165,6 @@ if __name__ == "__main__":
   webapp = DisneyWaitTimeGraph()
   webapp.waittime_week = WaitTimeWebService()
   webapp.waittime_avg_week = AverageWaitTimeForWeekService()
+  webapp.waittime = WaitTimeWebServiceV2()
   cherrypy.quickstart(webapp, '/', conf)
 
