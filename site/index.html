@@ -14,6 +14,9 @@
   <script src="http://d3js.org/d3.v3.js"></script>
   <script type="text/javascript">
   jQuery(document).ready(function() {
+    jQuery("#legend_show_hode").click(function() {
+      jQuery("#legend").toggle();
+    });
     jQuery("#legend_show_hide").mouseenter(function() {
       jQuery("#legend").toggle();
     });
@@ -29,12 +32,6 @@
 
   <h1>東京ディズニーランド・ディズニーシーの待ち時間</h1>
 
-  <div id="about" style="margin-left:10px;margin-bottom:15px;">
-    当サイトは過去の1周間分（2014/11/15から）の待ち時間情報を表示する。
-    対象乗り物は、今現在固定である。
-    データ収集、サイト作成のコードは<a href="https://github.com/yasny/tdl-wait-time">GitHub</a>で公開している。
-  </div>
-
   <div id="chart_container">
     <div id="y_axis" class="plain"></div>
     <div id="chart"></div>
@@ -45,6 +42,17 @@
     </div>
   </div>
 
+  <div id="about" style="margin-left:10px;margin-top:20px;">
+    当サイトは過去の1周間分（2014/11/15から）の待ち時間情報を表示する。
+    対象乗り物は、今現在固定である。
+    データ収集、サイト作成のコードは<a href="https://github.com/yasny/tdl-wait-time">GitHub</a>で公開している。
+    <ul>
+      <li><a href="./">過去1周間</a></li>
+      <li><a href="./?daysPrevious=4">過去5日間</a></li>
+      <li><a href="./?daysPrevious=1">昨日と今日</a></li>
+      <li><a href="./?daysPrevious=0">今日</a></li>
+    </ul>
+  </div>
 
   <div id="notes" style="margin-top:10px;margin-left:10px;">
     <h3>CHANGELOG</h3>
@@ -54,6 +62,7 @@
       <li>2014-11-15: バックエンドをsqliteに変更した。それから、一時間おきに自動更新にした。</li>
       <li>2014-11-16: サイトを<a href="http://www.cherrypy.org/">CherryPy</a>に変更した。最新データをデータベースから持ってくるように変更した。</li>
       <li>2014-11-18: 平均待ち時間を追加した（グラフの赤い、青い線）。平均値は0分を除き<strong>全</strong>乗り物の1時間平均</li>
+      <li>2014-11-22: 過去日間分を変更できるようになった。</li>
     </ul>
   </div>
 
