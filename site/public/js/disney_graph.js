@@ -9,10 +9,9 @@ var margin = {top:20, right:80, bottom:30, left:50},
 
 var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
-var daysPrevious = getParameterByName("daysPrevious");
-if (daysPrevious == null) {
-  daysPrevious=7;
-}
+var daysPrevious=getParameterByName("daysPrevious");
+if (daysPrevious == null)
+  daysPrevious=6;
 
 // 待ち時間データ取得
 d3.json("./waittime?daysPrevious="+daysPrevious,function(error, json) {
@@ -32,7 +31,7 @@ d3.json("./waittime?daysPrevious="+daysPrevious,function(error, json) {
   });
 
   var waittime_data = json;
-  
+
   // 平均待ち時間データ取得
   d3.json("./waittime?daysPrevious="+daysPrevious+"&parkAverage=true", function(error, json) {
     if (error) return console.warn(error);
@@ -58,7 +57,6 @@ d3.json("./waittime?daysPrevious="+daysPrevious,function(error, json) {
     disney_graph(waittime_data);
   });
 });
-
 
 var disney_graph = function(sets) {
   var graph = new Rickshaw.Graph( {
@@ -127,3 +125,4 @@ var disney_graph = function(sets) {
 
   previewXAxis.render();
 };
+
