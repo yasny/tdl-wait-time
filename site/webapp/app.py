@@ -11,6 +11,8 @@ DB_STRING = os.path.join(os.path.abspath(os.getcwd()),"../data_collector/disney.
 
 DEFAULT_ATTRACTIONS="4,5,14,23,26,35,36,43,44,52,53"
 
+__all__ = ["DisneyWaitTimGraph"]
+
 
 def dict_factory(cursor, row):
   """DB行をdictに変換する"""
@@ -21,17 +23,19 @@ def dict_factory(cursor, row):
 
 
 class DisneyWaitTimeGraph(object):
-  """index.htmlページ"""
   @cherrypy.expose
   def index(self, daysPrevious=7):
-    return file(os.path.join(cherrypy.config['/']['tools.staticdir.root'],'index.html'))
+    """index.htmlページ"""
+    cherrypy.log(str(cherrypy.request.app.config))
+    return file(os.path.join(cherrypy.request.app.config['/']['tools.staticdir.root'],'public/html/index.html'))
 
 
-class WaitTimeWebService(object):
-  exposed = True
-
+  @cherrypy.expose
   @cherrypy.tools.accept(media='text/plain')
-  def GET(self, daysPrevious=7, attractions=DEFAULT_ATTRACTIONS, parkAverage=False):
+  @cherrypy.tools.json_out()
+  def waittime(self, daysPrevious=7, attractions=DEFAULT_ATTRACTIONS, parkAverage=False):
+    """waittime web service"""
+
     #cherrypy.log("daysPrevious = "+str(daysPrevious))
     #cherrypy.log("attractions = "+str(attractions))
     if (not str(daysPrevious).isdigit()):
@@ -57,34 +61,5 @@ class WaitTimeWebService(object):
       c.row_factory = dict_factory
       cur = c.cursor()
       cur.execute(sql)
-      return json.dumps(cur.fetchall())
-
-
-if __name__ == "__main__":
-  # フォークしてバックグラウンドで動かす
-  cherrypy.process.plugins.Daemonizer(cherrypy.engine).subscribe()
-
-  # CherryPy設定
-  conf = {
-    '/' : {
-      'tools.sessions.on': False,
-      'tools.staticdir.root': os.path.abspath(os.getcwd()),
-      'log.access_file' : os.path.join(os.getcwd(),"access.log"),
-      'log.error_file' : os.path.join(os.getcwd(),"error.log"),
-      'log.screen': False,
-    },
-    '/waittime' : {
-      'request.dispatch':cherrypy.dispatch.MethodDispatcher(),
-      'tools.response_headers.on': True,
-      'tools.response_headers.headers': [('Content-Type', 'text/plain')],
-    },
-    '/static' : {
-      'tools.staticdir.on': True,
-      'tools.staticdir.dir': './public',
-    }
-  }
-
-  webapp = DisneyWaitTimeGraph()
-  webapp.waittime = WaitTimeWebService()
-  cherrypy.quickstart(webapp, '/', conf)
+      return cur.fetchall()
 

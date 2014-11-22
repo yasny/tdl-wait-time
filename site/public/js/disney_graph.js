@@ -15,7 +15,7 @@ if (daysPrevious == null) {
 }
 
 // 待ち時間データ取得
-d3.json("/waittime?daysPrevious="+daysPrevious,function(error, json) {
+d3.json("./waittime?daysPrevious="+daysPrevious,function(error, json) {
   //d3.json("/disney/waittime_week", function(error, json) {
   if (error) return console.warn(error);
   var series = d3.keys(json[0]).filter(function(key) { return key == "attraction_name"; });
@@ -34,7 +34,7 @@ d3.json("/waittime?daysPrevious="+daysPrevious,function(error, json) {
   var waittime_data = json;
   
   // 平均待ち時間データ取得
-  d3.json("/waittime?daysPrevious="+daysPrevious+"&parkAverage=true", function(error, json) {
+  d3.json("./waittime?daysPrevious="+daysPrevious+"&parkAverage=true", function(error, json) {
     if (error) return console.warn(error);
     var series = d3.keys(json[0]).filter(function(key) { return key == "name"; });
 
