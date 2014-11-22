@@ -41,6 +41,10 @@ class Server(object):
     if hasattr(engine, "console_control_handler"):
       engine.console_control_handler.subscribe()
 
+    from cherrypy.process.plugins import Daemonizer
+    d = Daemonizer(cherrypy.engine)
+    d.subscribe()
+
     engine.start()
 
     engine.block()
