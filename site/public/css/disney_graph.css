@@ -26,14 +26,14 @@ aside {
     left: 780px;
     text-align: right;
 }
- 
+
 #chart {
-    display: inline-block;
     position: relative;
-    margin: 0;
     border: 1px solid #dedede;
+    left: 60px;
+    margin-right: 100px;
 }
- 
+
 .rickshaw_graph .x_tick {
     position: absolute;
     top: 0;
@@ -57,31 +57,31 @@ aside {
   stroke-width: 4;
   stroke-dasharray: 4,5;
 }
- 
+
 #chart_container {
-    display: block;
     position: relative;
-    margin-left: 50px;
 }
- 
-/*
-.y_grid {
-    display: none;
-}
-  */
- 
+
 #y_axis {
     position: absolute;
-    width: 40px;
-    height: 500px;
-    left: -40px;
+    top: 0;
+    bottom: 0;
+    width: 60px;
 }
- 
+
+#legend_container {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#legend_show_hide {
+  width: 20px;
+  text-align: center;
+}
+
 #legend {
     vertical-align: top;
     display: inline-block;
 }
 
-#preview {
-  margin-top: 10px;
-}

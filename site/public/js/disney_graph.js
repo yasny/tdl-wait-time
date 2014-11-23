@@ -3,9 +3,10 @@ function getParameterByName(name) {
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
-var margin = {top:20, right:80, bottom:30, left:50},
+var margin = {top:20, right:120, bottom:30, left:0},
     width = jQuery(document).width() - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
+
 
 var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
@@ -59,6 +60,7 @@ d3.json("./waittime?daysPrevious="+daysPrevious,function(error, json) {
 });
 
 var disney_graph = function(sets) {
+  console.log("Width: "+width);
   var graph = new Rickshaw.Graph( {
     element: document.querySelector("#chart"),
     renderer: "line",
@@ -112,6 +114,7 @@ var disney_graph = function(sets) {
     legend: legend
   });
 
+  /*
   var preview = new Rickshaw.Graph.RangeSlider( {
     graph: graph,
     element: document.getElementById('preview'),
@@ -124,5 +127,6 @@ var disney_graph = function(sets) {
   });
 
   previewXAxis.render();
+  */
 };
 
