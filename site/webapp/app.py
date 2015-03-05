@@ -9,7 +9,7 @@ import cherrypy
 
 DB_STRING = os.path.join(os.path.abspath(os.getcwd()),"../data_collector/disney.sqlite")
 
-DEFAULT_ATTRACTIONS="4,5,14,23,26,35,36,43,44,52,53"
+DEFAULT_ATTRACTIONS="4,5,12,14,23,26,35,36,43,44,49,52,53"
 
 __all__ = ["DisneyWaitTimGraph"]
 
