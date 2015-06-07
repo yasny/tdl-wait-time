@@ -21,23 +21,26 @@ fi
 datetime=$( TZ="Asia/Tokyo" date +"%Y-%m-%d %H:%M" )
 file_datetime=$( TZ="Asia/Tokyo" date +%Y%m%d%H%M )
 
+#========== DISNEYLAND ==========
 out="${DL_OUT_DIR}/attr_wait_${file_datetime}.htm"
-curl -s -o $_temp_html -f  "http://s.tokyodisneyresort.jp/tdl/atrc_list.htm"
-cat $_temp_html | sed 's/h2 class="themeName"><p>\(.*\)<\/p>/h2 class="themeName">\1/' > $out
+curl -s -o $_temp_html -f -b cookies.txt -L  "http://info.tokyodisneyresort.jp/rt/s/gps/tdl_index.html?nextUrl=http://info.tokyodisneyresort.jp/rt/s/realtime/tdl_attraction.html&lat=35.6274489&lng=139.8840183"
+cat $_temp_html | sed -E 's/<h2 class="themeName"> *<p>([^<]+)<\/p> */<h2 class="themeName">\1/g' > $out
 
 if [ -f $out ]; then
   xsltproc --html --param datetime "\"$datetime\"" ${BASE_DIR}/disneyland_atr_wait_time.xslt $out 2>/dev/null > ${DL_OUT_DIR}/attr_wait_${file_datetime}.dat
 fi
 
+#========== DISNEYSEA ==========
 out="${DS_OUT_DIR}/attr_wait_${file_datetime}.htm"
-curl -s -o $_temp_html -f  "http://s.tokyodisneyresort.jp/tds/atrc_list.htm"
-cat $_temp_html | sed 's/h2 class="themeName"><p>\(.*\)<\/p>/h2 class="themeName">\1/' > $out
+curl -s -o $_temp_html -f -b cookies.txt -L  "http://info.tokyodisneyresort.jp/rt/s/gps/tds_index.html?nextUrl=http://info.tokyodisneyresort.jp/rt/s/realtime/tds_attraction.html&lat=35.6274489&lng=139.8840183"
+cat $_temp_html | sed -E 's/<h2 class="themeName"> *<p>([^<]+)<\/p> */<h2 class="themeName">\1/g' > $out
 
 if [ -f $out ]; then
   xsltproc --html --param datetime "\"$datetime\"" ${BASE_DIR}/disneyland_atr_wait_time.xslt $out 2>/dev/null > ${DS_OUT_DIR}/attr_wait_${file_datetime}.dat
 fi
 
-$BASE_DIR/insert_wait_time_into_db.sh $DL_OUT_DIR/attr_wait_${file_datetime}.dat
+#========== DISNEYLAND DB INSERT ==========
+$BASE_DIR/insert_wait_time_into_graphite.sh $DL_OUT_DIR/attr_wait_${file_datetime}.dat
 if [ $? -ne 0 ]; then
   logger "Error occured inserting data into database for file ${DL_OUT_DIR}/attr_wait_${file_datetime}.dat"
 else
@@ -45,7 +48,8 @@ else
   rm -rf $DL_OUT_DIR/attr_wait_${file_datetime}.htm
 fi
 
-$BASE_DIR/insert_wait_time_into_db.sh $DS_OUT_DIR/attr_wait_${file_datetime}.dat
+#========== DISNEYSEA DB INSERT ==========
+$BASE_DIR/insert_wait_time_into_graphite.sh $DS_OUT_DIR/attr_wait_${file_datetime}.dat
 if [ $? -ne 0 ]; then
   logger "Error occured inserting data into database for file ${DS_OUT_DIR}/attr_wait_${file_datetime}.dat"
 else

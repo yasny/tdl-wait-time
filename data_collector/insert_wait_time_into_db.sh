@@ -4,7 +4,6 @@ BASE_PATH=$( dirname $0 )
 DB="${BASE_PATH}/disney.sqlite"
 
 function execute_sql {
-  #echo "DB: $1" 1>&2
   echo $1 | sqlite3 $2
   local _rc=$?
   if [ $_rc -ne 0 ]; then
@@ -42,5 +41,6 @@ while read line; do
   fi
 
   execute_sql "insert into data (datetime,attraction_id,wait,status,fastpass,update_time) values (datetime(\"$_d\"),$_id,$_w,\"$_s\",\"$_f\",time(\"$_u\"));" $DB
+  #echo "insert into data (datetime,attraction_id,wait,status,fastpass,update_time) values (datetime(\"$_d\"),$_id,$_w,\"$_s\",\"$_f\",time(\"$_u\"));"
 done < $1
 

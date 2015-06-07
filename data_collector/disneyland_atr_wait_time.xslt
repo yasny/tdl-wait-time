@@ -36,7 +36,7 @@
 
   <xsl:template match="div[@class='about']">
     <!-- 名称 -->
-    <xsl:value-of select="h3/text()" />
+    <xsl:value-of select="normalize-space(h3/text())" />
     <xsl:text>,</xsl:text>
     <!-- 稼働状況 -->
     <xsl:value-of select="normalize-space(p[@class='run']/text())" />
@@ -45,20 +45,20 @@
     <!-- ファストパスがある場合はfp、ない場合はfp-no -->
     <xsl:if test="p[@class='fp']">
       <!-- "発券中(&nbsp;"と")"を削除する -->
-      <xsl:variable name="fp" select="translate(translate(p[@class='fp'],'発券中(&#160;',''),')','')" />
+      <xsl:variable name="fp" select="normalize-space(translate(translate(p[@class='fp'],'発券中(&#160;',''),')',''))" />
       <xsl:value-of select="$fp" />
     </xsl:if>
     <xsl:if test="p[@class='fp-no']">
-      <xsl:value-of select="p[@class='fp-no']" />
+      <xsl:value-of select="normalize-space(p[@class='fp-no'])" />
     </xsl:if>
   </xsl:template>
 
   <xsl:template match="p[@class='update']">
-    <xsl:variable name="update" select="translate(translate(text(),'(更新時間：',''),')','')" />
+    <xsl:variable name="update" select="normalize-space(translate(translate(text(),'(更新時間：',''),')',''))" />
     <xsl:value-of select="$update" />
   </xsl:template>
 
   <xsl:template match="div[@class='time']">
-    <xsl:value-of select="translate(p[@class='waitTime'],'分','')" />
+    <xsl:value-of select="normalize-space(translate(p[@class='waitTime'],'分',''))" />
   </xsl:template>
 </xsl:stylesheet>
